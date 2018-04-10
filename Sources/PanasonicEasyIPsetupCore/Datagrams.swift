@@ -49,7 +49,7 @@ enum ParseError: Error {
 	case datagramTooSmall
 }
 
-public struct CameraConfiguration: Equatable {
+public struct CameraConfiguration: Equatable, Hashable {
 	public let macAddress: MacAddress
 	public let ipV4address: IPv4Address
 	public let netmask: IPv4Address
@@ -169,5 +169,13 @@ public struct CameraConfiguration: Equatable {
 				
 				0xff, 0xff, 0x1d, 0x53
 		]
+	}
+	
+	public var hashValue: Int {
+		var number = Int.min
+		for (index, bits) in zip(0..<6, [40, 32, 24, 16, 8, 0]) {
+			number += Int(macAddress[index]) << bits
+		}
+		return number
 	}
 }
